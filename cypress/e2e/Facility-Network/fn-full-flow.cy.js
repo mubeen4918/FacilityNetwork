@@ -1,5 +1,5 @@
 import facility_methods from '../page-objects/login.cy.js';
-describe('template spec', () => {
+describe('Login Suite', () => {
    it('Log in with invalid email', () => {
     facility_methods.invalid_email();
 
