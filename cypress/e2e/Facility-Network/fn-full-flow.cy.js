@@ -1,4 +1,4 @@
-import facility_methods from '../Page-Objects/login.cy.js';
+import facility_methods from '../../Page-Objects/login.cy.js';
 
 describe('template spec', () => {
   it('Log in with invalid email', () => {
