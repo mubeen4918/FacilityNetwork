@@ -1,8 +1,14 @@
 const imaps = require('imap-simple');
 const { simpleParser } = require('mailparser');
+const cypress = require('cypress'); // Import Cypress
+const dotenv = require('dotenv');
+dotenv.config(); // Load environment variables from .env file
 
 module.exports = {
   e2e: {
+    baseUrl: process.env.LOGIN_URL, // Use imported Cypress
+    viewportWidth: 1366,
+    viewportHeight: 768,
     setupNodeEvents(on, config) {
       on('task', {
         async getGmailOTP({ retries = 8, delayMs = 5000 } = {}) {
