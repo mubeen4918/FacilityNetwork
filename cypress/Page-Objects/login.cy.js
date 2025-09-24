@@ -1,3 +1,4 @@
+import workOrders_methods from './organization.cy.js';
 class facility_methods {
 
     invalid_email() {
@@ -44,9 +45,8 @@ class facility_methods {
         });
 
         cy.contains('button', 'Verify', { timeout: 10000 }).click();
-
-
-
+        
+        cy.url({ timeout: 10000 }).should('include', '/main');
 
     }
 } export default new facility_methods;
