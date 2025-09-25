@@ -16,12 +16,15 @@ class facility_methods {
         cy.get('#swal2-html-container', { timeout: 10000 }).should('have.text', 'Invalid email or password.');
     }
     valid_login() {
+
+        cy.intercept('POST', '**/api/Auth/Login').as('loginRequest');
+        cy.intercept('POST', '**//api/Auth/VerifyOTP').as('verifyOTPRequest');
         cy.visit(Cypress.env('loginUrl'))
         cy.get('input[formcontrolname="email"]', { timeout: 10000 }).type(Cypress.env('fnEmail'));
         cy.get('input[formcontrolname="password"]', { timeout: 10000 }).type(Cypress.env('fnPassword'));
         cy.get('button[type="submit"]').should('be.visible').click();
 
-        cy.wait(5000);
+        cy.waitForNetworkSuccess('@loginRequest');
         cy.get('p-inputotp input.custom-otp-input')
             .eq(0).type('1')
             .get('p-inputotp input.custom-otp-input').eq(1).type('2')
@@ -29,8 +32,7 @@ class facility_methods {
             .get('p-inputotp input.custom-otp-input').eq(3).type('4');
             cy.contains('button', 'Verify', { timeout: 10000 }).click();
 
-        cy.wait(5000);
-
+        cy.waitForNetworkSuccess('@verifyOTPRequest');
         cy.task('getGmailOTP').then((otp) => {
             cy.log(`OTP is: ${otp}`);
 
