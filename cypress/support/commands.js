@@ -37,6 +37,43 @@ Cypress.Commands.add('login', (email, password) => {
     });
 });
 
+
+Cypress.Commands.add('typeSafe', { prevSubject: 'element' }, (subject, text) => {
+  const typeAndCheck = () => {
+    cy.wrap(subject).clear({ force: true }).type(text, { delay: 50, force: true });
+    if (typeof text === 'string') {
+      cy.wrap(subject).invoke('val').then((val) => {
+        if (val !== text) {
+          typeAndCheck();
+        } else {
+          expect(val).to.eq(text);
+        }
+      });
+    } else {
+      cy.wrap(subject).invoke('val').then((val) => {
+        if (val !== text) {
+          typeAndCheck();
+        } else {
+          expect(val).to.eq(text);
+        }
+      });
+    }
+  };
+  typeAndCheck();
+});
+
+Cypress.Commands.add('waitForNetworkSuccess', (alias) => {
+  cy.wait(alias).then((interception) => {
+    expect(interception.response.statusCode).to.be.within(200, 299);
+  });
+});
+
+Cypress.Commands.add('waitForNetworkFailure', (alias) => {
+  cy.wait(alias).then((interception) => {
+    expect(interception.response.statusCode).to.be.within(400, 599);
+  });
+});
+
 // Cypress.Commands.add('login', (email, password) => {
 //   // Intercept login request to capture token
 //   cy.intercept('POST', '/api/v1/accounts/login/').as('loginRequest');
