@@ -41,7 +41,7 @@ class workOrders_methods {
         this.getSearchInput().clear().type(searchTerm);
         cy.waitForNetworkSuccess('@getWorkOrders').then((interception) => {
             // Check the response of the request
-            if( interception.response.body.data.totalCount !== 0 ) {
+          if( interception.response.body.data.totalCount !== 0 ) {
                 cy.get('datatable-scroller').each($el => {
                     expect($el.text().toLowerCase()).to.contain(searchTerm.toLowerCase());
                 });
@@ -52,19 +52,26 @@ class workOrders_methods {
 
     selectFilter(filter='Status') {
         this.getFilterDropdown(filter).find('.ng-placeholder').click({force:true});
-        let selectedText;
+        let searchTerm;
         cy.get('.ng-option').then(options => {
             const randomIndex = Math.floor(Math.random() * options.length);
-            selectedText = options[randomIndex].innerText;
+            searchTerm = options[randomIndex].innerText;
             cy.wrap(options[randomIndex]).click({ force: true });
         });
         cy.waitForNetworkSuccess('@getWorkOrders').then((interception) => {
             // Check the response of the request
-            if( interception.response.body.data.totalCount !== 0 ) {
-                cy.get('datatable-body-cell').each($el => {
-                    expect($el.text()).to.contain(selectedText);
+         if (interception.response.body.data.totalCount !== 0) {
+            cy.get('datatable-row-wrapper').each($row => {
+                cy.wrap($row)
+                .find('span')
+                .invoke('text')
+                .then(rowText => {
+                    const cleanText = rowText.replace(/\u00a0/g, ' ').trim();
+                    expect(cleanText.toLowerCase()).to.include(searchTerm.toLowerCase());
                 });
+            });
             }
+
         });
     }
     

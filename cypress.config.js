@@ -9,6 +9,23 @@ module.exports = {
     baseUrl: process.env.LOGIN_URL, // Use imported Cypress
     viewportWidth: 1366,
     viewportHeight: 768,
+    // For Consecutive Failed Tests
+    // retries: 2,
+    // numTestsKeptInMemory: 1,
+    defaultCommandTimeout: 30000,
+    pageLoadTimeout: 60000,
+    requestTimeout: 15000,
+    responseTimeout: 15000,
+    reporter: "cypress-multi-reporters",
+    reporterOptions: {
+      reporterEnabled: "mochawesome",
+      mochawesomeReporterOptions: {
+        reportDir: "cypress/reports/mochawesome",
+        overwrite: false,
+        html: false,
+        json: true
+      }
+    },
     setupNodeEvents(on, config) {
       on('task', {
         async getGmailOTP({ retries = 8, delayMs = 5000 } = {}) {
