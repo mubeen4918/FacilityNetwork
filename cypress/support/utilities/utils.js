@@ -25,7 +25,7 @@ export function generateRandomCompanyName() {
 
 
 export function getMessageNotification(expectedText) {
-    return cy.get('.ant-message-notice-content', { timeout: 10000 })
+    return cy.get('.swal2-html-container')
         .invoke('text')
         .then((text) => {
             expect(text.toLowerCase()).to.include(expectedText.toLowerCase());
