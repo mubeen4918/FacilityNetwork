@@ -16,7 +16,7 @@ module.exports = {
             const configIMAP = {
               imap: {
                 user: config.env.gmail_user,
-                password: config.env.gmail_pass,
+                password: process.env.GMAIL_PASS,
                 host: 'imap.gmail.com',
                 port: 993,
                 authTimeout: 100000,
