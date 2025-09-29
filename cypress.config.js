@@ -32,7 +32,7 @@ module.exports = {
           async function fetchOTP(attempt = 1) {
             const configIMAP = {
               imap: {
-                user: config.env.gmail_user,
+                user: process.env.GMAIL_USER,
                 password: process.env.GMAIL_PASS,
                 host: 'imap.gmail.com',
                 port: 993,
@@ -89,6 +89,25 @@ module.exports = {
           }
 
           return fetchOTP();
+        }
+      }),
+      on('task', {
+        deleteFile(filename) {
+          const fs = require('fs');
+          const path = require('path');
+          const dir = path.join(__dirname, '..', 'cypress', 'downloads');
+          if (fs.existsSync(dir)) {
+            const files = fs.readdirSync(dir);
+            files.forEach(file => {
+              if (file.includes(filename)) {
+                fs.unlinkSync(path.join(dir, file));
+                console.log(`Deleted file: ${file}`);
+              } else {
+                console.log(`File not matched: ${file}`);
+              } 
+
+            });
+          }
         }
       });
     }
