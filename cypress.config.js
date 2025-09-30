@@ -1,16 +1,39 @@
 const imaps = require('imap-simple');
 const { simpleParser } = require('mailparser');
+const cypress = require('cypress'); // Import Cypress
+const dotenv = require('dotenv');
+dotenv.config(); // Load environment variables from .env file
 
 module.exports = {
   e2e: {
+    baseUrl: process.env.LOGIN_URL, // Use imported Cypress
+    viewportWidth: 1366,
+    viewportHeight: 768,
+    // For Consecutive Failed Tests
+    // retries: 2,
+    // numTestsKeptInMemory: 1,
+    defaultCommandTimeout: 30000,
+    pageLoadTimeout: 60000,
+    requestTimeout: 15000,
+    responseTimeout: 15000,
+    reporter: "cypress-multi-reporters",
+    reporterOptions: {
+      reporterEnabled: "mochawesome",
+      mochawesomeReporterOptions: {
+        reportDir: "cypress/reports/mochawesome",
+        overwrite: false,
+        html: false,
+        json: true
+      }
+    },
     setupNodeEvents(on, config) {
       on('task', {
         async getGmailOTP({ retries = 8, delayMs = 5000 } = {}) {
           async function fetchOTP(attempt = 1) {
             const configIMAP = {
               imap: {
-                user: config.env.gmail_user,
-                password: config.env.gmail_pass,
+                user: process.env.GMAIL_USER,
+                password: process.env.GMAIL_PASS,
                 host: 'imap.gmail.com',
                 port: 993,
                 authTimeout: 100000,
@@ -66,6 +89,25 @@ module.exports = {
           }
 
           return fetchOTP();
+        }
+      }),
+      on('task', {
+        deleteFile(filename) {
+          const fs = require('fs');
+          const path = require('path');
+          const dir = path.join(__dirname, '..', 'cypress', 'downloads');
+          if (fs.existsSync(dir)) {
+            const files = fs.readdirSync(dir);
+            files.forEach(file => {
+              if (file.includes(filename)) {
+                fs.unlinkSync(path.join(dir, file));
+                console.log(`Deleted file: ${file}`);
+              } else {
+                console.log(`File not matched: ${file}`);
+              } 
+
+            });
+          }
         }
       });
     }

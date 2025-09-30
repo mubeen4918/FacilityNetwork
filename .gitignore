@@ -141,3 +141,11 @@ vite.config.ts.timestamp-*
 
 ./cypress.env.json
 cypress.env.json
+
+
+./package-lock.json
+package-lock.json
+package-lock.json
+
+./cypress/downloads
+cypress/downloads
