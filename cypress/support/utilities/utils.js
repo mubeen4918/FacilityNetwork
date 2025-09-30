@@ -31,3 +31,22 @@ export function getMessageNotification(expectedText) {
             expect(text.toLowerCase()).to.include(expectedText.toLowerCase());
         });
 }
+
+
+export function  closeMessageNotification(button) {
+    cy.get('div.swal2-actions > button.swal2-confirm.swal2-styled')
+        .contains(button)
+        .click();
+}
+
+
+
+export function selectFromDropdown(dropdownElement) {
+    cy.wait(1000);
+    dropdownElement.should('be.visible').click();
+    cy.get('.ng-option').then(options => {
+        const randomIndex = Math.floor(Math.random() * options.length);
+        cy.wrap(options[randomIndex]).click({ force: true });
+    });
+}
+

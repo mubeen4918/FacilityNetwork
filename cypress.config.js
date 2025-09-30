@@ -10,8 +10,8 @@ module.exports = {
     viewportWidth: 1366,
     viewportHeight: 768,
     // For Consecutive Failed Tests
-    // retries: 2,
-    // numTestsKeptInMemory: 1,
+    retries: 2,
+    numTestsKeptInMemory: 1,
     defaultCommandTimeout: 30000,
     pageLoadTimeout: 60000,
     requestTimeout: 15000,

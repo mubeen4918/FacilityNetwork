@@ -3,7 +3,9 @@ import {
     generateNumericValue,
     generateUSPhoneNumber,
     generateRandomCompanyName,
-    getMessageNotification
+    getMessageNotification,
+    closeMessageNotification,
+    selectFromDropdown
 } from '../support/utilities/utils';
 
 class workOrders_methods {
@@ -96,29 +98,16 @@ class workOrders_methods {
     // ==========================
     //  COMMON ACTIONS
     // ==========================
-    selectFromDropdown(dropdownElement) {
-        cy.wait(1000);
-        dropdownElement.should('be.visible').click();
-        cy.get('.ng-option').then(options => {
-            const randomIndex = Math.floor(Math.random() * options.length);
-            cy.wrap(options[randomIndex]).click({ force: true });
-        });
-    }
 
-    closeMessageNotification(button) {
-        cy.get('div.swal2-actions > button.swal2-confirm.swal2-styled')
-          .contains(button)
-          .click();
-    }
 
     validInputs() {
-        this.selectFromDropdown(this.getSubClientDropdown());
+        selectFromDropdown(this.getSubClientDropdown());
         cy.waitForNetworkSuccess('@getSubClientLocations');
         cy.waitForNetworkSuccess('@getCustomerPriorities');
         cy.waitForNetworkSuccess('@getServices');
-        this.selectFromDropdown(this.getLocationDropdown());
-        this.selectFromDropdown(this.getSelectPriorityDropdown());
-        this.selectFromDropdown(this.getServiceDropdown());
+        selectFromDropdown(this.getLocationDropdown());
+        selectFromDropdown(this.getSelectPriorityDropdown());
+        selectFromDropdown(this.getServiceDropdown());
         this.getRequestReferenceInput().type('Test Reference Code');
         this.getServiceDescriptionInput().type('This is a test service description for the work order.');
         this.getNTE().type(generateNumericValue(100, 1000));
@@ -181,16 +170,16 @@ class workOrders_methods {
         this.getCreateWorkOrderButton().click();
         cy.waitForNetworkSuccess('@getWorkOrderSubClients');
         cy.get('h2').should('contain.text', 'Create Work Order');
-        this.selectFromDropdown(this.getSubClientDropdown());
+        selectFromDropdown(this.getSubClientDropdown());
         cy.waitForNetworkSuccess('@getSubClientLocations');
-        this.selectFromDropdown(this.getLocationDropdown());
+        selectFromDropdown(this.getLocationDropdown());
         cy.waitForNetworkSuccess('@getCustomerPriorities');
-        this.selectFromDropdown(this.getSelectPriorityDropdown());
+        selectFromDropdown(this.getSelectPriorityDropdown());
         cy.waitForNetworkSuccess('@getServices');
-        this.selectFromDropdown(this.getServiceDropdown());
+        selectFromDropdown(this.getServiceDropdown());
         this.getSubClientDropdown().scrollIntoView();
         this.getClearSubClientSelection().click();
-        this.selectFromDropdown(this.getSubClientDropdown());
+        selectFromDropdown(this.getSubClientDropdown());
         this.getCreateWOButton().click();
         cy.contains('This field is required').should('be.visible');
     }
@@ -206,7 +195,7 @@ class workOrders_methods {
         this.getCreateWOButton().click();
         cy.waitForNetworkSuccess('@createWorkOrder');
         getMessageNotification('WorkOrder created successfully');
-        this.closeMessageNotification('OK');
+        closeMessageNotification('OK');
     }
 
     validateFileUpload() {
@@ -224,7 +213,7 @@ class workOrders_methods {
         this.getCreateWOButton().click();
         cy.waitForNetworkSuccess('@createWorkOrder');
         getMessageNotification('WorkOrder created successfully');
-        this.closeMessageNotification('OK');
+        closeMessageNotification('OK');
     }
 
     validateDownloadOption() {
