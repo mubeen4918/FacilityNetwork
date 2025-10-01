@@ -23,7 +23,17 @@ export function generateRandomCompanyName() {
     return `${companies[randomIndex]}_${datestamp}`;
 }
 
-
+// Function to generate a random email address
+export function generateRandomEmail() {
+const names = [
+    "Alex", "Jordan", "Taylor", "Morgan", "Casey", "Riley", "Jamie", "Avery",
+    "Cameron", "Drew", "Quinn", "Skyler", "Reese", "Peyton", "Blake", "Hayden"
+];
+const randomName = names[Math.floor(Math.random() * names.length)];
+const timestamp = Date.now();
+const randomStr = Math.random().toString(36).substring(2, 6);
+return `${randomName.toLowerCase()}${randomStr}${timestamp}@example.com`;
+}
 export function getMessageNotification(expectedText) {
     return cy.get('.swal2-html-container')
         .invoke('text')
