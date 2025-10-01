@@ -1,12 +1,20 @@
 const imaps = require('imap-simple');
 const { simpleParser } = require('mailparser');
-const cypress = require('cypress'); // Import Cypress
 const dotenv = require('dotenv');
 dotenv.config(); // Load environment variables from .env file
 
 module.exports = {
   e2e: {
+    env: {
+      loginUrl: process.env.LOGIN_URL,
+      fnEmail: process.env.FN_EMAIL,
+      fnPassword: process.env.FN_PASSWORD,
+      slackWebhookUrl: process.env.SLACK_WEBHOOK_URL,
+      SLACK_BOT_TOKEN: process.env.SLACK_BOT_TOKEN,
+      SLACK_CHANNEL: process.env.SLACK_CHANNEL,
+    },
     baseUrl: process.env.LOGIN_URL, // Use imported Cypress
+
     viewportWidth: 1366,
     viewportHeight: 768,
     // For Consecutive Failed Tests
