@@ -28,6 +28,9 @@ class user_methods{
 //  SELECTORS (UI Elements)
 // ==========================
 
+
+
+
     getInviteUserButton(){
         return cy.get('button').contains(/Invite User/i);
     }
@@ -76,6 +79,18 @@ class user_methods{
         getMessageNotification('invited successfully');
         closeMessageNotification('OK');
         return emails;
+    }
+
+    inviteAlreadyInvitedUser(){
+        this.getInviteUserButton().click();
+        cy.waitForNetworkSuccess('@getOrgsanizations');
+        this.getUserEmailField().type(Cypress.env('fnEmail'));
+        selectFromDropdown(this.getUserRoleDropdown());
+        this.getAddButton().click();
+        this.getSendInviteButton().click();
+        cy.waitForNetworkSuccess('@inviteUser');
+        getMessageNotification('already active');
+        closeMessageNotification('OK');
     }
     
 } export default new user_methods();

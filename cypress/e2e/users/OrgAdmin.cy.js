@@ -7,12 +7,15 @@ describe('Org Admin - Users Page Tests', () => {
         user_methods.navigateToUsersPage();
 
     });
-    // it('Should Add a new User', () => {
-    //     user_methods.inviteOneUser();
-    // });
+    it('Should Add a new User', () => {
+        user_methods.inviteOneUser();
+    });
 
     it('should add bulk users', () => {
-        user_methods.inviteBulkUsers(3); // Inviting 3 users as an example
+        user_methods.inviteBulkUsers(3);
+    });
+    it('should not allow inviting already invited user', () => {
+        user_methods.inviteAlreadyInvitedUser();
     });
 
 });
