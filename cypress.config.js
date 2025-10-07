@@ -46,9 +46,9 @@ module.exports = {
                 port: 993,
                 authTimeout: 100000,
                 tls: true,
-                // tlsOptions: {
-                //   rejectUnauthorized: false   // ✅ accept self-signed / unverified certs
-                // }
+                tlsOptions: {
+                  rejectUnauthorized: false   // ✅ accept self-signed / unverified certs
+                }
                 
               }
             };
