@@ -37,7 +37,7 @@
 //     });
 // });
 
-import facility_methods from '../Page-Objects/login.cy.js';
+import facility_methods from '../Page-Objects/loginMethods.cy.js';
 
 Cypress.Commands.add('login', () => {
 

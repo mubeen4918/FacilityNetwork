@@ -1,4 +1,4 @@
-import facility_methods from '../../Page-Objects/login.cy.js';
+import facility_methods from '../../Page-Objects/loginMethods.cy.js';
 
 describe('Login Tests', () => {
   it('Log in with invalid email', () => {
