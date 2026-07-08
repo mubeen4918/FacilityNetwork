@@ -2,7 +2,7 @@ import user_methods from "../../Page-Objects/users.cy";
 
 describe('Org Admin - Users Page Tests', () => {
     beforeEach(() => {
-        cy.login(Cypress.env('fnEmail'), Cypress.env('fnPassword'));
+        cy.login();
         user_methods.init();
         user_methods.navigateToUsersPage();
 

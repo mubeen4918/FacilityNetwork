@@ -1,16 +1,21 @@
 import workOrders_methods from '../../Page-Objects/organization.cy.js';
 
 describe('Organization Admin Work Orders Tests', () => {
-    
+
+    // beforeEach(() => {
+    //     cy.login(Cypress.env('fnEmail'), Cypress.env('fnPassword'));
+    //     workOrders_methods.init();
+    //     workOrders_methods.navigateToWorkOrders();
+    // });
+
     beforeEach(() => {
-        cy.login(Cypress.env('fnEmail'), Cypress.env('fnPassword'));
+        cy.login();
         workOrders_methods.init();
         workOrders_methods.navigateToWorkOrders();
     });
-
-// ==========================
-//  UI VALIDATION TESTS
-// ==========================
+    // ==========================
+    //  UI VALIDATION TESTS
+    // ==========================
 
     it('Should validate UI elements on Work Orders page', () => {
         workOrders_methods.validateUIElements();
@@ -21,7 +26,7 @@ describe('Organization Admin Work Orders Tests', () => {
         workOrders_methods.getFilterDropdown('Trade/Service').should('have.class', 'ng-select-disabled');
         workOrders_methods.getFilterDropdown('SLA/Priority').should('have.class', 'ng-select-disabled');
         workOrders_methods.getFilterDropdown('Region').should('have.class', 'ng-select-disabled');
-        
+
         workOrders_methods.selectFilter('Sub-Client');
         workOrders_methods.getFilterDropdown('Trade/Service').should('not.have.class', 'ng-select-disabled');
         workOrders_methods.getFilterDropdown('SLA/Priority').should('not.have.class', 'ng-select-disabled');
@@ -32,12 +37,12 @@ describe('Organization Admin Work Orders Tests', () => {
         workOrders_methods.validateSearchFunctionality('Test');
     });
 
-     
 
 
-// ==========================
-//  END-TO-END HAPPY FLOWS
-// ==========================
+
+    // ==========================
+    //  END-TO-END HAPPY FLOWS
+    // ==========================
 
     it('Should create a new Work Order successfully', () => {
         workOrders_methods.createNewWorkOrder();
@@ -56,9 +61,9 @@ describe('Organization Admin Work Orders Tests', () => {
 
 
 
-// ==========================
-//  NEGATIVE TEST CASES
-// ==========================
+    // ==========================
+    //  NEGATIVE TEST CASES
+    // ==========================
 
     it('Should not allow creating a Work Order with empty required fields', () => {
         workOrders_methods.getCreateWorkOrderButton().click();
@@ -85,4 +90,4 @@ describe('Organization Admin Work Orders Tests', () => {
     //     workOrders_methods.getCreateWOButton().click();
     //     cy.contains('Enter valid phone number').should('be.visible');
     // });
-    });
+});

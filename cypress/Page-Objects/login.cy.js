@@ -22,18 +22,19 @@ class facility_methods {
         cy.visit(Cypress.env('loginUrl'))
         cy.get('input[formcontrolname="email"]', { timeout: 10000 }).type(Cypress.env('fnEmail'));
         cy.get('input[formcontrolname="password"]', { timeout: 10000 }).type(Cypress.env('fnPassword'));
+        const loginTime = Date.now();
         cy.get('button[type="submit"]').should('be.visible').click();
 
         cy.waitForNetworkSuccess('@loginRequest');
-        cy.get('p-inputotp input.custom-otp-input')
-            .eq(0).type('1')
-            .get('p-inputotp input.custom-otp-input').eq(1).type('2')
-            .get('p-inputotp input.custom-otp-input').eq(2).type('3')
-            .get('p-inputotp input.custom-otp-input').eq(3).type('4');
-            cy.contains('button', 'Verify', { timeout: 10000 }).click();
+        // cy.get('p-inputotp input.custom-otp-input')
+        //     .eq(0).type('1')
+        //     .get('p-inputotp input.custom-otp-input').eq(1).type('2')
+        //     .get('p-inputotp input.custom-otp-input').eq(2).type('3')
+        //     .get('p-inputotp input.custom-otp-input').eq(3).type('4');
+        //     cy.contains('button', 'Verify', { timeout: 10000 }).click();
 
-        cy.waitForNetworkSuccess('@verifyOTPRequest');
-        cy.task('getGmailOTP').then((otp) => {
+        // cy.waitForNetworkSuccess('@verifyOTPRequest');
+        cy.task('getGmailOTP', { loginTime }).then((otp) => {
             cy.log(`OTP is: ${otp}`);
 
             // Ensure OTP is treated as a string

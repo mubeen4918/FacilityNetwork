@@ -36,12 +36,18 @@ module.exports = {
     },
     setupNodeEvents(on, config) {
       on('task', {
-        async getGmailOTP({ retries = 8, delayMs = 5000 } = {}) {
+        async getGmailOTP({
+          loginTime,
+          retries = 8,
+          delayMs = 5000
+        } = {}) {
           async function fetchOTP(attempt = 1) {
+            console.log("gmail_user:", config.env.gmail_user);
+            console.log("gmail_pass:", config.env.gmail_pass ? "Loaded" : "Missing");
             const configIMAP = {
               imap: {
-                user: process.env.GMAIL_USER,
-                password: process.env.GMAIL_PASS,
+                user: config.env.gmail_user,
+                password: config.env.gmail_pass,
                 host: 'imap.gmail.com',
                 port: 993,
                 authTimeout: 100000,
@@ -49,7 +55,7 @@ module.exports = {
                 tlsOptions: {
                   rejectUnauthorized: false   // ✅ accept self-signed / unverified certs
                 }
-                
+
               }
             };
 
@@ -75,7 +81,28 @@ module.exports = {
               // Sort emails by most recent date
               results.sort((a, b) => new Date(b.attributes.date) - new Date(a.attributes.date));
 
+              // const latest = results[0];
+              // const all = latest.parts.find(part => part.which === 'TEXT');
+              // const parsed = await simpleParser(all.body);
+
               const latest = results[0];
+
+              const emailTime = new Date(latest.attributes.date).getTime();
+
+              console.log("Login Time :", new Date(loginTime));
+              console.log("Email Time :", latest.attributes.date);
+
+              if (emailTime < loginTime) {
+                console.log("Older OTP email found. Waiting for a newer one...");
+
+                if (attempt < retries) {
+                  await new Promise(r => setTimeout(r, delayMs));
+                  return fetchOTP(attempt + 1);
+                }
+
+                throw new Error("No new OTP email received.");
+              }
+
               const all = latest.parts.find(part => part.which === 'TEXT');
               const parsed = await simpleParser(all.body);
 
@@ -99,25 +126,25 @@ module.exports = {
           return fetchOTP();
         }
       }),
-      on('task', {
-        deleteFile(filename) {
-          const fs = require('fs');
-          const path = require('path');
-          const dir = path.join(__dirname, '..', 'cypress', 'downloads');
-          if (fs.existsSync(dir)) {
-            const files = fs.readdirSync(dir);
-            files.forEach(file => {
-              if (file.includes(filename)) {
-                fs.unlinkSync(path.join(dir, file));
-                console.log(`Deleted file: ${file}`);
-              } else {
-                console.log(`File not matched: ${file}`);
-              } 
+        on('task', {
+          deleteFile(filename) {
+            const fs = require('fs');
+            const path = require('path');
+            const dir = path.join(__dirname, '..', 'cypress', 'downloads');
+            if (fs.existsSync(dir)) {
+              const files = fs.readdirSync(dir);
+              files.forEach(file => {
+                if (file.includes(filename)) {
+                  fs.unlinkSync(path.join(dir, file));
+                  console.log(`Deleted file: ${file}`);
+                } else {
+                  console.log(`File not matched: ${file}`);
+                }
 
-            });
+              });
+            }
           }
-        }
-      });
+        });
     }
   }
 };

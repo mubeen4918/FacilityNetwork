@@ -24,19 +24,43 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
+// import facility_methods from '../Page-Objects/login.cy.js';
+
+
+// Cypress.Commands.add('login', (email, password) => {
+//     cy.session([email, password], () => {
+//         facility_methods.valid_login(email, password);
+//     });
+//     // Only visit after session is restored
+//     cy.then(() => {
+//         cy.visit('/');
+//     });
+// });
+
 import facility_methods from '../Page-Objects/login.cy.js';
 
+Cypress.Commands.add('login', () => {
 
-Cypress.Commands.add('login', (email, password) => {
-    cy.session([email, password], () => {
-        facility_methods.valid_login(email, password);
-    });
-    // Only visit after session is restored
-    cy.then(() => {
-        cy.visit('/');
-    });
+    cy.session(
+        'fn-user-session',
+
+        () => {
+            cy.log('Creating new session...');
+            facility_methods.valid_login();
+        },
+
+        {
+            validate() {
+                cy.window().then((win) => {
+                    expect(win.localStorage.getItem('@FNtoken')).to.not.be.null;
+                });
+            },
+
+            cacheAcrossSpecs: true
+        }
+    );
+
 });
-
 
 Cypress.Commands.add('typeSafe', { prevSubject: 'element' }, (subject, text) => {
   const typeAndCheck = () => {
